@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Library Management System</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- QR CODE -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+    <!-- PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- CHART JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- HTML SCANNER -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.db = db;
+    </script>
+
+</head>
+
+<body>
+
+<h1>📚 Library Management System</h1>
+
+<!-- LOGIN -->
+<div id="loginBox">
+    <h2>Admin Login</h2>
+    <input type="text" id="username">
+    <input type="password" id="password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+    <p id="loggedUser" style="color:green;font-weight:bold;"></p>
+</div>
+
+<!-- USER LOGIN -->
+<div id="loginPage">
+    <h2>Login</h2>
+    <input type="text" id="loginUser">
+    <input type="password" id="loginPass">
+    <button onclick="login()">Login</button>
+
+    <h2>Sign Up</h2>
+    <input type="text" id="signupUser">
+    <input type="password" id="signupPass">
+    <button onclick="signUp()">Sign Up</button>
+</div>
+
+<div id="dashboard" style="display:none;">
+    <h2 id="welcomeUser"></h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<!-- MAIN UI -->
+<div class="main-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2>📚 Menu</h2>
+        <button onclick="showSection('dashboardSection')">Dashboard</button>
+        <button onclick="showSection('librarySection')">Library</button>
+        <button onclick="showSection('searchSection')">Search</button>
+        <button onclick="showSection('analyticsSection')">Analytics</button>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+        <!-- DASHBOARD -->
+        <div id="dashboardSection" class="section">
+            <div class="dashboard">
+                <div class="card"><h3>Total Books</h3><p id="totalBooks">0</p></div>
+                <div class="card"><h3>Total Students</h3><p id="totalStudents">0</p></div>
+                <div class="card"><h3>Issued Books</h3><p id="issuedBooks">0</p></div>
+                <div class="card"><h3>Available Books</h3><p id="availableBooks">0</p></div>
+            </div>
+        </div>
+
+        <!-- LIBRARY -->
+        <div id="librarySection" class="section" style="display:none;">
+            <textarea id="books" placeholder="Books"></textarea>
+            <textarea id="students" placeholder="Students"></textarea>
+
+            <input type="date" id="issueDate">
+            <input type="date" id="returnDate">
+
+            <button onclick="calculateFine()">Calculate Fine</button>
+            <p id="fineResult"></p>
+
+            <button onclick="generateLibrary()">Generate Library</button>
+            <button onclick="clearData()">Clear</button>
+
+            <div id="output"></div>
+            <div id="qrOutput"></div>
+        </div>
+
+        <!-- SEARCH -->
+        <div id="searchSection" class="section" style="display:none;">
+            <input type="text" id="searchInput">
+            <button onclick="searchLibrary()">Search</button>
+            <p id="searchResult"></p>
+        </div>
+
+        <!-- ANALYTICS -->
+        <div id="analyticsSection" class="section" style="display:none;">
+            <canvas id="libraryChart"></canvas>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- EXTRA FEATURES -->
+<button onclick="downloadData()">Export JSON</button>
+<button onclick="downloadPDF()">Download PDF</button>
+
+<div id="reader"></div>
+<button onclick="startScanner()">Start Scanner</button>
+
+<div id="adminPanel" style="display:none;">
+    <button onclick="showLoginHistory()">Login History</button>
+    <button onclick="exportAllData()">Export</button>
+</div>
+
+<!-- AI BUTTONS (UNCHANGED) -->
+<div class="ai-buttons">
+    <button onclick="generateAutoReport()">🤖 Generate AI Report</button>
+    
+    <button onclick="aiSuggestion()">
+        🤖 AI Suggestion
+    </button>
+
+    <!-- IMPORTANT FIX -->
+    <p id="searchResult" style="
+        margin-top:20px;
+        padding:15px;
+        background:#f1f5f9;
+        border-radius:10px;
+        font-weight:bold;
+    "></p>
+</div>
+
+<!-- CHATBOT -->
+<div id="chatbotBox" class="chatbot-mini">
+
+    <div class="chat-header">
+        🤖 AI
+        <span class="close-btn" onclick="toggleChat()">×</span>
+    </div>
+
+    <div id="chatBody" class="chat-body">
+        <div id="chatLog" class="chat-log"></div>
+    </div>
+
+    <div class="chat-input-box">
+        <input id="chatInput" type="text" placeholder="Type...">
+        <button onclick="sendMessage()">➤</button>
+    </div>
+
+</div>
+
+<footer>
+    <p>Library Management System | Diploma Project</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
