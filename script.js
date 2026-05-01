@@ -538,4 +538,39 @@ function showSection(sectionId) {
 function updateAll() {
     updateDashboard();
     renderChart();
+}function printLibrary() {
+
+    let content = document.getElementById("output").innerHTML;
+
+    if (content.trim() === "") {
+        alert("⚠️ Generate library first!");
+        return;
+    }
+
+    let printWindow = window.open('', '', 'width=900,height=700');
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Library Report</title>
+            <style>
+                body { font-family: Arial; padding: 20px; }
+                h2 { text-align: center; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 8px; text-align: center; border: 1px solid black; }
+            </style>
+        </head>
+        <body>
+            <h2>📚 Library Report</h2>
+            ${content}
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    // 🔥 FIX
+    printWindow.onload = function () {
+        printWindow.print();
+    };
 }
