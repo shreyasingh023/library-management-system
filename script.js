@@ -14,53 +14,24 @@ loadAdmins();
 
 /* ================= LOGIN SYSTEM ================= */
 function login() {
-    let username = document.getElementById("loginUser").value;
-    let password = document.getElementById("loginPass").value;
 
-    let user = users.find(u => u.username === username && u.password === password);
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
 
-    if (!user) {
-        alert("Invalid login ❌");
+    if (username === "" || password === "") {
+        alert("Enter username & password");
         return;
     }
 
-    currentUser = user;
-    localStorage.setItem("currentUser", JSON.stringify(user));
+    // save user (THIS IS IMPORTANT)
+    localStorage.setItem("currentUser", username);
 
-    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("loginBox").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
 
-    document.getElementById("welcomeUser").innerText = "Welcome " + user.username;
-    document.getElementById("loggedUser").innerText = "Logged in as: " + username;
+    document.getElementById("welcomeUser").innerText = "Welcome " + username;
+    document.getElementById("analyticsSection").style.display = "block";
 }
-
-/* ================= ADD ADMIN ================= */
-function addAdmin(newUser, newPass) {
-
-    admins.push({
-        username: newUser,
-        password: newPass
-    });
-
-    saveAdmins();
-    alert("✅ New Admin Added: " + newUser);
-}
-
-/* ================= SAVE ADMIN ================= */
-function saveAdmins() {
-    localStorage.setItem("admins", JSON.stringify(admins));
-}
-
-/* ================= LOAD ADMIN ================= */
-function loadAdmins() {
-
-    let data = localStorage.getItem("admins");
-
-    if (data) {
-        admins = JSON.parse(data);
-    }
-}
-
 /* ================= LIBRARY SYSTEM ================= */
 function generateLibrary() {
 
@@ -139,6 +110,7 @@ function generateLibrary() {
     output.innerHTML = html;
     updateDashboard();
     renderChart();
+    updateAll();
 }
 
 
@@ -174,6 +146,7 @@ function issueBook(book, student, issueDate, returnDate, fine) {
     }
     updateDashboard();
     renderChart();
+    updateAll();
 }
 
 /* ================= RETURN BOOK ================= */
@@ -193,6 +166,7 @@ function returnBook(book) {
     generateLibrary();
     updateDashboard();
     renderChart();
+    updateAll();
 }
 
 /* ================= CLEAR DATA ================= */
@@ -373,6 +347,15 @@ function showHistory() {
 
 function renderChart() {
 
+    let canvas = document.getElementById("libraryChart");
+
+    if (!canvas) {
+        console.log("Canvas missing");
+        return;
+    }
+
+    let ctx = canvas.getContext("2d");
+
     let books = document.getElementById("books").value
         .split(",")
         .filter(b => b.trim() !== "").length;
@@ -381,38 +364,23 @@ function renderChart() {
         .split(",")
         .filter(s => s.trim() !== "").length;
 
-    let issued = issuedBooks.length;
+    let issued = parseInt(document.getElementById("issuedBooks").innerText) || 0;
     let available = books - issued;
-    if (available < 0) available = 0;
 
-    let ctx = document.getElementById("libraryChart").getContext("2d");
-
-    // destroy old chart (important)
-    if (chartInstance) {
-        chartInstance.destroy();
+    if (window.chartInstance) {
+        window.chartInstance.destroy();
     }
 
-    chartInstance = new Chart(ctx, {
-        type: 'bar',
+    window.chartInstance = new Chart(ctx, {
+        type: "bar",
         data: {
             labels: ["Books", "Students", "Issued", "Available"],
             datasets: [{
-                label: "Library Data",
-                data: [books, students, issued, available]
+                label: "Library Analytics",
+                data: [books, students, issued, available],
+                backgroundColor: ["#1976d2", "#42a5f5", "#0d47a1", "#90caf9"]
             }]
-        },
-        options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            display: true,
-            position: 'bottom'
         }
-    }
-}
-    
-    
     });
 }
 function generateAutoReport() {
@@ -443,6 +411,7 @@ Available Books  : ${availableBooks}
 
     doc.text(report, 10, 10);
     doc.save("Library_Auto_Report.pdf");
+    updateAll();
 }function aiSuggestion() {
 
     let books = document.getElementById("books").value.toLowerCase();
@@ -485,89 +454,88 @@ function smartAlert() {
         alert("⚠️ High Book Issuance Alert!");
     }
 }setInterval(smartAlert, 5000);
-function sendMessage() {
 
-    let input = document.getElementById("chatInput").value.toLowerCase();
-    let chatLog = document.getElementById("chatLog");
 
-    if (input.trim() === "") return;
+    function sendMessage() {
 
-    // user message
-    chatLog.innerHTML += `<p><b>You:</b> ${input}</p>`;
+    let input = document.getElementById("msgInput"); // FIXED
+    let msg = input.value;
+
+    if (msg.trim() === "") return;
+
+    let chatLog = document.querySelector(".chat-log"); // FIXED
+
+    // USER MESSAGE
+    chatLog.innerHTML += "<p><b>You:</b> " + msg + "</p>";
 
     let response = "";
 
-    // 🤖 AI LOGIC
-    if (input.includes("total books")) {
-        response = "📚 Total books are: " + document.getElementById("totalBooks").innerText;
+    // AI LOGIC
+    if (msg.includes("total books")) {
+        response = "📚 Total books: " + document.getElementById("totalBooks").innerText;
     }
-    else if (input.includes("students")) {
+    else if (msg.includes("students")) {
         response = "👨‍🎓 Total students: " + document.getElementById("totalStudents").innerText;
     }
-    else if (input.includes("issued")) {
+    else if (msg.includes("issued")) {
         response = "📕 Issued books: " + document.getElementById("issuedBooks").innerText;
     }
-    else if (input.includes("available")) {
+    else if (msg.includes("available")) {
         response = "📗 Available books: " + document.getElementById("availableBooks").innerText;
     }
-    else if (input.includes("suggest")) {
-        response = "📘 Try reading Java, Python, or DSA books!";
+    else if (msg.includes("suggest")) {
+        response = "📘 Try Java, Python, DSA books!";
     }
     else {
-        response = "❓ I am not sure. Try asking about books, students, or issued books.";
+        response = "🤖 I can help with books, students, issued data.";
     }
 
-    // bot response
-    chatLog.innerHTML += `<p><b>AI:</b> ${response}</p>`;
+    // BOT MESSAGE
+    chatLog.innerHTML += "<p><b>Bot:</b> " + response + "</p>";
 
-    document.getElementById("chatInput").value = "";
-}function toggleChat() {
-    let box = document.getElementById("chatBody");
-    box.classList.toggle("hidden");
+    input.value = "";
 }
-function signUp() {
-    let username = document.getElementById("signupUser").value;
-    let password = document.getElementById("signupPass").value;
+;function logout() {
 
-    if (!username || !password) {
-        alert("Please fill all fields");
-        return;
-    }
-
-    let exists = users.find(u => u.username === username);
-    if (exists) {
-        alert("User already exists");
-        return;
-    }
-
-    users.push({ username, password });
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Signup successful ✅");
-    document.getElementById("welcomeUser").innerText = "Welcome " + user.username;
-    document.getElementById("loggedUser").innerText = "Logged in as: " + user.username;
-}function logout() {
-    currentUser = null;
     localStorage.removeItem("currentUser");
 
-    document.getElementById("loginPage").style.display = "block";
+    document.getElementById("loginBox").style.display = "block";
     document.getElementById("dashboard").style.display = "none";
-}window.onload = function () {
-    let savedUser = JSON.parse(localStorage.getItem("currentUser"));
+}
+
+
+window.onload = function () {
+
+    let savedUser = localStorage.getItem("currentUser");
 
     if (savedUser) {
+
         currentUser = savedUser;
 
-        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("loginBox").style.display = "none";
         document.getElementById("dashboard").style.display = "block";
 
-        document.getElementById("welcomeUser").innerText = "Welcome " + savedUser.username;
+        document.getElementById("welcomeUser").innerText = "Welcome " + savedUser;
     }
 };
 function showSection(sectionId) {
+
     let sections = document.querySelectorAll(".section");
 
     sections.forEach(sec => sec.style.display = "none");
 
-    document.getElementById(sectionId).style.display = "block";
+    let active = document.getElementById(sectionId);
+    active.style.display = "block";
+
+    // 🔥 IMPORTANT FIX FOR ANALYTICS
+    if (sectionId === "analyticsSection") {
+
+        setTimeout(() => {
+            renderChart();
+        }, 300);
+    }
+}
+function updateAll() {
+    updateDashboard();
+    renderChart();
 }
