@@ -1,18 +1,18 @@
-/* =========================================
-   📚 LIBRARY MANAGEMENT SYSTEM - FINAL CODE
-   ========================================= */
+/* 
+    LIBRARY MANAGEMENT SYSTEM - FINAL CODE
+   */
 
-/* ================= GLOBAL VARIABLES ================= */
+
 let issuedBooks = [];
 
-/* ================= ADMIN SYSTEM ================= */
+/*= ADMIN SYSTEM == */
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let currentUser = null;
 
 /* Load saved admins from localStorage */
 loadAdmins();
 
-/* ================= LOGIN SYSTEM ================= */
+/* = LOGIN SYSTEM == */
 function login() {
 
     let username = document.getElementById("username").value;
@@ -32,7 +32,7 @@ function login() {
     document.getElementById("welcomeUser").innerText = "Welcome " + username;
     document.getElementById("analyticsSection").style.display = "block";
 }
-/* ================= LIBRARY SYSTEM ================= */
+/*= LIBRARY SYSTEM ==== */
 function generateLibrary() {
 
     let books = document.getElementById("books").value
@@ -114,14 +114,14 @@ function generateLibrary() {
 }
 
 
-/* ================= FIXED ISSUE BOOK (MERGED LOGIC) ================= */
+/* = FIXED ISSUE BOOK (MERGED LOGIC)= */
 function issueBook(book, student, issueDate, returnDate, fine) {
 
     // CASE 1: normal book issue
     if (arguments.length === 1) {
 
         if (issuedBooks.includes(book)) {
-            alert("❌ Already Issued");
+            alert(" Already Issued");
             return;
         }
 
@@ -149,13 +149,13 @@ function issueBook(book, student, issueDate, returnDate, fine) {
     updateAll();
 }
 
-/* ================= RETURN BOOK ================= */
+/*  RETURN BOOK ===== */
 function returnBook(book) {
 
     let index = issuedBooks.indexOf(book);
 
     if (index === -1) {
-        alert("❌ Not Issued");
+        alert(" Not Issued");
         return;
     }
 
@@ -169,7 +169,7 @@ function returnBook(book) {
     updateAll();
 }
 
-/* ================= CLEAR DATA ================= */
+/* == CLEAR DATA ==== */
 function clearData() {
 
     document.getElementById("books").value = "";
@@ -184,7 +184,7 @@ function clearData() {
     issuedBooks = [];
 }
 
-/* ================= SEARCH ================= */
+/* ===== SEARCH ===== */
 function searchLibrary() {
 
     let value = document.getElementById("searchInput").value.trim();
@@ -200,11 +200,11 @@ function searchLibrary() {
         result.innerText = "👨‍🎓 Student Found: " + value;
     }
     else {
-        result.innerText = "❌ Not Found";
+        result.innerText = " Not Found";
     }
 }
 
-/* ================= EXPORT JSON ================= */
+/* === EXPORT JSON ==== */
 function downloadData() {
 
     let data = {
@@ -223,7 +223,7 @@ function downloadData() {
     a.click();
 }
 
-/* ================= PDF DOWNLOAD ================= */
+/* === PDF DOWNLOAD ==== */
 function downloadPDF() {
 
     const { jsPDF } = window.jspdf;
@@ -235,7 +235,7 @@ function downloadPDF() {
     doc.save("library-report.pdf");
 }
 
-/* ================= QR GENERATOR ================= */
+/* === QR GENERATOR ==== */
 function generateQR(student) {
 
     let qrDiv = document.createElement("div");
@@ -252,7 +252,7 @@ function generateQR(student) {
     document.getElementById("qrOutput").appendChild(qrDiv);
 }
 
-/* ================= FIREBASE INIT ================= */
+/* === FIREBASE INIT ==== */
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
     authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -264,7 +264,7 @@ if (typeof firebase !== "undefined") {
     const db = firebase.firestore();
 }
 
-/* ================= ID CARD ================= */
+/* === ID CARD ==== */
 function downloadID(name) {
 
     const { jsPDF } = window.jspdf;
@@ -276,7 +276,7 @@ function downloadID(name) {
     doc.save(name + "_id.pdf");
 }
 
-/* ================= SCANNER ================= */
+/* === SCANNER ===== */
 function startScanner() {
 
     let scanner = new Html5QrcodeScanner("reader", {
@@ -289,12 +289,12 @@ function startScanner() {
     });
 }
 
-/* ================= DARK MODE ================= */
+/* === DARK MODE = */
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
 }
 
-/* ================= FINE CALCULATION ================= */
+/* ==== FINE CALCULATION== */
 function calculateFine() {
 
     let student = document.getElementById("searchInput").value;
@@ -314,7 +314,7 @@ function calculateFine() {
     let fine = lateDays > 0 ? lateDays * finePerDay : 0;
 
     document.getElementById("fineResult").innerText =
-        "💰 Fine: ₹ " + fine;
+        " Fine: ₹ " + fine;
 
     issueBook(student, book,
         issueDate.toISOString().split("T")[0],
@@ -323,7 +323,7 @@ function calculateFine() {
     );
 }
 
-/* ================= HISTORY PLACEHOLDER ================= */
+/* == HISTORY PLACEHOLDER === */
 function showHistory() {
     console.log("History Updated:", issuedBooks);
 }function updateDashboard() {
@@ -419,16 +419,16 @@ Available Books  : ${availableBooks}
     let suggestion = "";
 
     if (books.includes("java")) {
-        suggestion = "📘 Suggestion: Student should also study OOP concepts";
+        suggestion = " Suggestion: Student should also study OOP concepts";
     }
     else if (books.includes("python")) {
-        suggestion = "🐍 Suggestion: Python is great for AI/ML learning";
+        suggestion = " Suggestion: Python is great for AI/ML learning";
     }
     else if (books.includes("c++")) {
-        suggestion = "⚙️ Suggestion: Focus on DSA with C++";
+        suggestion = " Suggestion: Focus on DSA with C++";
     }
     else {
-        suggestion = "📚 Suggestion: Add more technical books for better learning";
+        suggestion = " Suggestion: Add more technical books for better learning";
     }
 
     document.getElementById("searchResult").innerText = suggestion;
@@ -451,7 +451,7 @@ function smartAlert() {
     let issued = parseInt(document.getElementById("issuedBooks").innerText) || 0;
 
     if (issued > 10) {
-        alert("⚠️ High Book Issuance Alert!");
+        alert(" High Book Issuance Alert!");
     }
 }setInterval(smartAlert, 5000);
 
@@ -472,22 +472,22 @@ function smartAlert() {
 
     // AI LOGIC
     if (msg.includes("total books")) {
-        response = "📚 Total books: " + document.getElementById("totalBooks").innerText;
+        response = " Total books: " + document.getElementById("totalBooks").innerText;
     }
     else if (msg.includes("students")) {
-        response = "👨‍🎓 Total students: " + document.getElementById("totalStudents").innerText;
+        response = " Total students: " + document.getElementById("totalStudents").innerText;
     }
     else if (msg.includes("issued")) {
-        response = "📕 Issued books: " + document.getElementById("issuedBooks").innerText;
+        response = " Issued books: " + document.getElementById("issuedBooks").innerText;
     }
     else if (msg.includes("available")) {
-        response = "📗 Available books: " + document.getElementById("availableBooks").innerText;
+        response = "Available books: " + document.getElementById("availableBooks").innerText;
     }
     else if (msg.includes("suggest")) {
-        response = "📘 Try Java, Python, DSA books!";
+        response = "Try Java, Python, DSA books!";
     }
     else {
-        response = "🤖 I can help with books, students, issued data.";
+        response = " I can help with books, students, issued data.";
     }
 
     // BOT MESSAGE
@@ -527,7 +527,7 @@ function showSection(sectionId) {
     let active = document.getElementById(sectionId);
     active.style.display = "block";
 
-    // 🔥 IMPORTANT FIX FOR ANALYTICS
+    //  IMPORTANT FIX FOR ANALYTICS
     if (sectionId === "analyticsSection") {
 
         setTimeout(() => {
@@ -543,7 +543,7 @@ function updateAll() {
     let content = document.getElementById("output").innerHTML;
 
     if (content.trim() === "") {
-        alert("⚠️ Generate library first!");
+        alert(" Generate library first!");
         return;
     }
 
@@ -561,7 +561,7 @@ function updateAll() {
             </style>
         </head>
         <body>
-            <h2>📚 Library Report</h2>
+            <h2> Library Report</h2>
             ${content}
         </body>
         </html>
@@ -569,7 +569,7 @@ function updateAll() {
 
     printWindow.document.close();
 
-    // 🔥 FIX
+    //  FIX
     printWindow.onload = function () {
         printWindow.print();
     };
