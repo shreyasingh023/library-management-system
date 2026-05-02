@@ -271,7 +271,7 @@ footer {
     cursor: pointer;
 }
 
-/* ================= LAYOUT ======== */
+/* ================= LAYOUT ================= */
 .main-container {
     display: flex;
     height: 100vh;
@@ -326,13 +326,13 @@ body {
     text-align: center;
 }
 
-/* ==== HEADER ======== */
+/* ================= HEADER ================= */
 h1, h2 {
     color: #1565c0;
     margin: 20px 0;
 }
 
-/* ==== CONTAINER BOX ======== */
+/* ================= CONTAINER BOX ================= */
 .container, #loginBox, #dashboard {
     width: 90%;
     max-width: 400px;
@@ -343,7 +343,7 @@ h1, h2 {
     box-shadow: 0 8px 20px rgba(21, 101, 192, 0.2);
 }
 
-/* === INPUT FIELDS ===== */
+/* ================= INPUT FIELDS ================= */
 input {
     width: 100%;
     padding: 10px;
@@ -359,7 +359,7 @@ input:focus {
     box-shadow: 0 0 8px rgba(25, 118, 210, 0.3);
 }
 
-/* ======= BUTTON ======== */
+/* ================= BUTTON ================= */
 button {
     width: 100%;
     padding: 10px;
@@ -377,13 +377,13 @@ button:hover {
     transform: scale(1.03);
 }
 
-/* ===== MESSAGE ======== */
+/* ================= MESSAGE ================= */
 #loginMsg {
     margin-top: 10px;
     color: red;
 }
 
-/* ==== NAVBAR (optional) ==== */
+/* ================= NAVBAR (optional) ================= */
 .navbar {
     background: #1976d2;
     padding: 12px;
@@ -391,14 +391,14 @@ button:hover {
     font-weight: bold;
 }
 
-/* ====== CARDS ==== */
+/* ================= CARDS ================= */
 .card {
     background: white;
     padding: 15px;
     margin: 10px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(21, 101, 192, 0.2);
-}/* === MENU / NAVBAR ===== */
+}/* ================= MENU / NAVBAR ================= */
 .menu {
     background: linear-gradient(90deg, #1976d2, #0d47a1);
     padding: 12px;
